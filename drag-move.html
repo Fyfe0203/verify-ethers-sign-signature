@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+
+		<title>drag-move</title>
+		<style>
+			* {
+				padding: 0;
+				margin: 0;
+			}
+			#drag {
+				position: absolute;
+				left: 0;
+				top: 0;
+				width: 100px;
+				height: 100px;
+				background-color: red;
+			}
+
+			#result {
+				overflow: auto;
+				width: 600px;
+				height: 300px;
+				background-color: aquamarine;
+			}
+
+			#parent {
+				position: relative;
+				background-color: antiquewhite;
+				height: 100%;
+			}
+		</style>
+	</head>
+	<body>
+		<div id="result">
+			<div id="parent">
+				<div id="drag"></div>
+			</div>
+		</div>
+
+		<script type="text/javascript">
+			const scrol = document.querySelector('#result');
+			const drag = document.querySelector('#drag');
+			const parent = document.querySelector('#parent');
+
+			let startX = 0;
+			let startY = 0;
+
+			function touch(event) {
+				const e = event || window.event;
+				switch (e.type) {
+					case 'mousedown':
+					case 'touchstart':
+						if (e.target.id !== 'drag') return;
+						startX = e.clientX;
+						startY = e.clientY;
+						break;
+					case 'mouseup':
+					case 'touchend':
+						startX = startY = 0;
+						break;
+					case 'mousemove':
+					case 'touchmove':
+						if (!startY && !startX) return;
+						const x = e.clientX - startX;
+						const y = e.clientY - startY;
+						const l = parseFloat(drag.style.left || 0);
+						const t = parseFloat(drag.style.top || 0);
+
+						let left = l + x;
+						drag.style.left = (left < 0 ? 0 : left) + 'px';
+
+						let top = t + y;
+						drag.style.top = (top < 0 ? 0 : top) + 'px';
+
+						let tx = l + x + drag.clientWidth;
+						parent.style.width = tx + 'px';
+
+						let ty = t + y + drag.clientHeight;
+						parent.style.height = ty + 'px';
+
+						scrol.scrollTo(
+							scrol.scrollWidth - scrol.clientWidth,
+							scrol.scrollHeight - scrol.clientHeight
+						);
+
+						startX = e.clientX;
+						startY = e.clientY;
+
+						e.preventDefault();
+						break;
+				}
+			}
+
+			scrol.addEventListener('mousedown', touch, false);
+			document.addEventListener('mousemove', touch, false);
+			document.addEventListener('mouseup', touch, false);
+		</script>
+	</body>
+</html>
