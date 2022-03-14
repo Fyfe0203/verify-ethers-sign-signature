@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+
+		<title>ELFINKINGDOM-sign</title>
+		<style>
+			* {
+				word-break: break-all;
+			}
+		</style>
+	</head>
+	<body>
+		<input type="text" id="text" />
+		<button id="signFun">签名</button>
+		<div id="result"></div>
+		<script
+			src="https://cdn.ethers.io/lib/ethers-5.2.umd.min.js"
+			type="application/javascript"
+		></script>
+		<script type="text/javascript">
+			let Myaddress = '';
+
+			async function signFun() {
+				const address = await ethereum.request({
+					method: 'eth_requestAccounts',
+				});
+
+				Myaddress = address;
+
+				const provider = new ethers.providers.Web3Provider(ethereum);
+				const signer = await provider.getSigner();
+
+				console.log('Account:', await signer.getAddress());
+
+			  const message =	document.querySelector('#text').value;
+
+				const signature = await signer.signMessage('' + message);
+				console.log('signature', signature);
+
+				document.querySelector('#result').innerHTML =
+					'address: ' +
+					address +
+					'<br />' +
+					'message: ' +
+					message +
+					'<br />' +
+					'signature: ' +
+					signature +
+					'<br />';
+			}
+
+			document
+				.querySelector('#signFun')
+				.addEventListener('mouseup', signFun, true);
+		</script>
+	</body>
+</html>
