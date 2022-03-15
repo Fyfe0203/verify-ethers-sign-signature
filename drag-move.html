@@ -19,14 +19,17 @@
 			}
 
 			#result {
+				position: relative;
 				overflow: auto;
 				width: 600px;
 				height: 300px;
 				background-color: aquamarine;
 			}
 
-			#parent {
-				position: relative;
+			#result::before {
+				content: '';
+				display: block;
+				width: 100%;
 				background-color: antiquewhite;
 				height: 100%;
 			}
@@ -34,15 +37,12 @@
 	</head>
 	<body>
 		<div id="result">
-			<div id="parent">
-				<div id="drag"></div>
-			</div>
+			<div id="drag"></div>
 		</div>
 
 		<script type="text/javascript">
 			const scrol = document.querySelector('#result');
 			const drag = document.querySelector('#drag');
-			const parent = document.querySelector('#parent');
 
 			let startX = 0;
 			let startY = 0;
@@ -73,12 +73,6 @@
 
 						let top = t + y;
 						drag.style.top = (top < 0 ? 0 : top) + 'px';
-
-						let tx = l + x + drag.clientWidth;
-						parent.style.width = tx + 'px';
-
-						let ty = t + y + drag.clientHeight;
-						parent.style.height = ty + 'px';
 
 						scrol.scrollTo(
 							scrol.scrollWidth - scrol.clientWidth,
